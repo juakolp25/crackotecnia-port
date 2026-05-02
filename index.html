@@ -1,667 +1,1005 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crackotecnia</title>
-  <link rel="stylesheet" href="asset/css/style.css">
-  <link rel="shortcut icon" href="asset/img/cracko-logo.ico">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-  <!--
-    - google font link
-  -->
+  <title>Juaquin Gonzalez — Dev</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-</head>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --accent:       #4f9cf9;
+      --accent-soft:  #3b82f620;
+      --accent-hover: #2563eb;
+      --green:        #22c55e;
+
+      /* dark defaults */
+      --bg:        #0d1117;
+      --bg2:       #161b22;
+      --bg3:       #1c2330;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --text-muted:#8b949e;
+      --card:      #161b22;
+      --shadow:    0 4px 24px rgba(0,0,0,.45);
+    }
+    [data-theme="light"] {
+      --bg:        #f6f8fa;
+      --bg2:       #ffffff;
+      --bg3:       #eaeef2;
+      --border:    #d0d7de;
+      --text:      #1f2328;
+      --text-muted:#656d76;
+      --card:      #ffffff;
+      --shadow:    0 4px 24px rgba(0,0,0,.10);
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background .3s, color .3s;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── LAYOUT ─────────────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 0 24px;
+      padding: 24px 20px;
+    }
+
+    /* ── TOP BAR ────────────────────────────────────────────── */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .lang-switcher {
+      display: flex;
+      gap: 4px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+    }
+    .lang-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .lang-btn.active, .lang-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      cursor: pointer;
+      display: grid; place-items: center;
+      font-size: 16px;
+      transition: all .2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SIDEBAR ────────────────────────────────────────────── */
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      animation: fadeUp .5s ease both;
+    }
+    .avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .avatar {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+    }
+    .avatar-placeholder {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      display: grid; place-items: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 0 6px var(--accent-soft);
+    }
+    .sidebar-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--text);
+    }
+    .sidebar-role {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent)44;
+      border-radius: 999px;
+      padding: 3px 12px;
+      letter-spacing: .04em;
+    }
+    .avail-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .avail-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px #22c55e30;
+      animation: pulse 2s infinite;
+    }
+
+    /* contacts */
+    .contacts {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--bg3);
+      display: grid; place-items: center;
+      font-size: 15px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+    }
+    .contact-value {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .contact-value a:hover { color: var(--accent); }
+
+    /* social */
+    .socials {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: grid; place-items: center;
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: all .2s;
+    }
+    .social-link:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+
+    /* ── MAIN CONTENT ───────────────────────────────────────── */
+    .main { display: flex; flex-direction: column; gap: 24px; }
+
+    /* navbar */
+    .navbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 6px;
+      display: flex;
+      gap: 4px;
+      box-shadow: var(--shadow);
+      animation: fadeUp .5s .1s ease both;
+    }
+    .nav-btn {
+      flex: 1;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      padding: 9px 16px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .nav-btn.active, .nav-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px #4f9cf940;
+    }
+
+    /* articles */
+    .article { display: none; animation: fadeUp .35s ease both; }
+    .article.active { display: block; }
+
+    /* section title */
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: var(--text);
+      margin-bottom: 24px;
+      position: relative;
+      padding-left: 16px;
+    }
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 4px; height: 70%;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+
+    /* about text */
+    .about-body {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      animation: fadeUp .5s .15s ease both;
+    }
+    .about-body p { color: var(--text-muted); margin-bottom: 14px; font-size: 15px; }
+    .about-body p:last-child { margin-bottom: 0; }
+
+    /* clients */
+    .clients-section {
+      margin-top: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      animation: fadeUp .5s .25s ease both;
+    }
+    .clients-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .clients-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .client-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      transition: all .25s;
+      display: flex;
+      align-items: center;
+    }
+    .client-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(79,156,249,.15); }
+    .client-card img { height: 36px; width: auto; filter: brightness(0) invert(1); opacity: .6; transition: opacity .2s; }
+    [data-theme="light"] .client-card img { filter: none; opacity: .85; }
+    .client-card:hover img { opacity: 1; }
+
+    /* timeline */
+    .timeline-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      animation: fadeUp .5s .1s ease both;
+    }
+    .timeline-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .timeline-header-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      display: grid; place-items: center;
+      color: var(--accent);
+      font-size: 17px;
+    }
+    .timeline-header h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .timeline-list { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 24px 24px;
+      border-left: 2px solid var(--border);
+    }
+    .timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -5px; top: 6px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .timeline-item h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .timeline-item span {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 2px 10px;
+      margin-bottom: 8px;
+    }
+    .timeline-item p { font-size: 13.5px; color: var(--text-muted); }
+
+    /* skills */
+    .skills-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      animation: fadeUp .5s .2s ease both;
+    }
+    .skills-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .skill-item {}
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .skill-name { font-size: 13px; font-weight: 500; }
+    .skill-pct { font-size: 12px; color: var(--accent); font-weight: 600; }
+    .skill-bar {
+      height: 5px;
+      background: var(--bg3);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #7c3aed);
+      border-radius: 999px;
+      transform-origin: left;
+      animation: growBar .8s .4s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    /* portfolio */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all .25s;
+      animation: fadeUp .4s ease both;
+    }
+    .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(79,156,249,.18); border-color: var(--accent); }
+    .project-card[data-hidden] { display: none; }
+    .project-thumb {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16/10;
+      background: var(--bg3);
+    }
+    .project-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .project-card:hover .project-thumb img { transform: scale(1.06); }
+    .project-overlay {
+      position: absolute; inset: 0;
+      background: #0d111790;
+      display: grid; place-items: center;
+      opacity: 0;
+      transition: opacity .25s;
+      font-size: 22px;
+      color: #fff;
+    }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .project-info { padding: 14px 16px; }
+    .project-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .project-info p { font-size: 12px; color: var(--text-muted); }
+
+    /* whatsapp fab */
+    .wa-fab {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: #25d366;
+      display: grid; place-items: center;
+      font-size: 24px;
+      color: #fff;
+      box-shadow: 0 6px 20px #25d36650;
+      transition: transform .2s;
+      z-index: 999;
+    }
+    .wa-fab:hover { transform: scale(1.1); }
+
+    /* animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes growBar {
+      from { width: 0; }
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 3px #22c55e30; }
+      50%      { box-shadow: 0 0 0 6px #22c55e10; }
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; margin-bottom: 4px; }
+      .topbar { grid-column: 1; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .layout { padding: 12px; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
 <body>
 
-  <!--
-    - #MAIN
-  -->
+<div class="layout">
 
-  <main>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="ca">CA</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="it">IT</button>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+      <i class="bi bi-moon-fill" id="themeIcon"></i>
+    </button>
+  </div>
 
-    <!--
-      - #SIDEBAR
-    -->
-
-    <aside class="sidebar" data-sidebar>
-
-      <div class="sidebar-info">
-
-        <figure class="avatar-box">
-          <img src="asset/img/porfil-crak.png" alt="Juaquin Gonzalez" width="80">
-        </figure>
-
-        <div class="info-content">
-          <h1 class="name" title="Juaquin Gonzalez">Juaquin Gonzalez</h1>
-
-          <p class="title">Desarrollador Web</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="avatar-wrap">
+      <div class="avatar-placeholder">JG</div>
+      <div>
+        <div class="sidebar-name">Juaquin Gonzalez</div>
+        <div style="margin: 6px 0;">
+          <span class="sidebar-role" data-i18n="role">Desarrollador Web</span>
         </div>
-
-        <button class="info_more-btn" data-sidebar-btn>
-          <ion-icon name="chevron-down"></ion-icon>
-        </button>
-
+        <div class="avail-badge">
+          <span class="avail-dot"></span>
+          <span data-i18n="available">Disponible para proyectos</span>
+        </div>
       </div>
-
-      <div class="sidebar-info_more">
-
-        <div class="separator"></div>
-
-        <ul class="contacts-list">
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="mail-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Email</p>
-
-              <a href="mailto:juaquingonzalez012@gmail.com" class="contact-link">juaquingonzalez012@</a>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="phone-portrait-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Telefono</p>
-
-              <a href="tel:1159936607" class="contact-link">1159936607</a>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="calendar-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Cumpleaños</p>
-
-              <time datetime="1982-06-23">11 de Abril</time>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="location-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Ubicacion</p>
-
-              <address>Buenos Aires, Argentina</address>
-            </div>
-
-          </li>
-
-        </ul>
-
-        <div class="separator"></div>
-
-        <ul class="social-list">
-
-          <li class="social-item">
-            <a href="https://github.com/juakolp25" target="_blank" class="social-link">
-              <ion-icon name="logo-github"></ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="https://twitter.com/Jkh_ksr25" target="_blank" class="social-link">
-              <ion-icon name="logo-twitter"></ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="https://www.instagram.com/nino.hereje.jkh/" target="_blank" class="social-link">
-              <ion-icon name="logo-instagram"></ion-icon>
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-    </aside>
-
-
-
-
-
-    <!--
-      - #main-content
-    -->
-
-    <div class="main-content">
-
-
-
-
-
-      <!--
-        - #NAVBAR
-      -->
-
-      <nav class="navbar">
-
-        <ul class="navbar-list">
-
-          <li class="navbar-item">
-            <button class="navbar-link  active" data-nav-link>Acerca de mi</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Resumen</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Cartera</button>
-          </li>
-
-        </ul>
-
-      </nav>
-
-
-
-
-
-      <!--
-        - #ABOUT
-      -->
-
-      <article class="about  active" data-page="acerca de mi">
-
-        <header>
-          <h2 class="h2 article-title">Acerca de mí</h2>
-        </header>
-
-        <section class="about-text">
-          <p>
-            Con su permiso me presento soy Juaquin A. Gonzalez, soy desarrollador web freelancer, oriundo de Formosa, Argentina.
-            Trabajo de forma online con personas que quieren meter sus proyectos de emprendimiento al mundo IT.
-            Apunto mas a clientes latino americanos.
-          </p>
-
-          <p>
-            Me considero un estudiante, ya que en este mundo estas en aprendizaje constantemente, autodidacta y siempre buscando
-            una forma de hacer los trabajos lo mas antes posible.
-            Me gusta tener contacto con los clientes para ir mejorando los sitios por que las ideas no son absolutas, me gusta darle toques
-            personales que al finalizar sea lo que el cliente busca como producto final.
-          </p>
-        </section>
-
-        <!--
-          - clients
-        -->
-
-        <section class="clients">
-
-          <h3 class="h3 clients-title">Clientes</h3>
-
-          <ul class="clients-list has-scrollbar">
-
-            <li class="clients-item">
-              <a href="https://www.instagram.com/desayunos.artesanales.2020/" target="_blank">
-                <img src="asset/img/logo_desayuno.png" alt="cliente logo">
-              </a>
-            </li>
-            
-            <li class="clients-item">
-              <a href="https://juakolp25.github.io/fiestopolis/" target="_blank">
-                <img src="asset/img/logo-fiestopolis.png" alt="cliente logo">
-              </a>
-            </li>
-
-            <li class="clients-item">
-              <a href="https://juakolp25.github.io/redes_web/" target="_blank">
-                <img src="asset/img/logo_redes.png" alt="cliente logo">
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #RESUME
-      -->
-
-      <article class="resume" data-page="resumen">
-
-        <header>
-          <h2 class="h2 article-title">Resumen</h2>
-        </header>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Educación</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Argentina Programa 4.0</h4>
-
-              <span>2022 — Actualidad</span>
-
-              <p class="timeline-text">
-                El curso es de programador web full stack jr al finalizarlo, trata todo lo relacionado al desarrollo web tanto lenguajes como diseños y te capacita para que al recibirlo puedas estar capacitado a enfrentar proyectos reales complejos. 
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">I. F. T. S. 14</h4>
-
-              <span>2021 — Actualidad</span>
-
-              <p class="timeline-text">
-                Estudiante de automatización y robótica, se trata inicialmente en conceptos basicos de informatica, electrónica y mecánica. Luego se pone en marcha lo aprendido realizando proyectos reales.
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">E. P. E. T. Técnica Química 2</h4>
-
-              <span>2009 — 2015</span>
-
-              <p class="timeline-text">
-                Me desempeñé en control de calidad, nomenclatura de elementos quimicos básicos, medición de básico y ácido en compuestos y calibración de materiales.
-              </p>
-
-            </li>
-
-          </ol>
-
-        </section>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Experiencia</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Segar S. R. L.</h4>
-
-              <span>2018 - Actualidad</span>
-
-              <p class="timeline-text">
-                Actualmente realizo trabajos de recepción en mercado, control de merma del local, y devolución a proovedores.
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">SP Group</h4>
-
-              <span>2017 — 2018</span>
-
-              <p class="timeline-text">
-                Realizaba trabajos de prevención en eventos masivos tanto en boliches, eventos deportivos y eventos culturales.
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Pasante Químico - Cloronor S. A.</h4>
-
-              <span>2015</span>
-
-              <p class="timeline-text">
-                Realizaba las tareas de laboratorio, control de calidad, control de stock de materiales, y archivado de datos en planilla de calculos.
-              </p>
-
-            </li>
-
-          </ol>
-
-        </section>
-
-        <section class="skill">
-
-          <h3 class="h3 skills-title">Mis Herramientas</h3>
-
-          <ul class="skills-list content-card">
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Javascript</h5>
-                <data value="70">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Python</h5>
-                <data value="80">80%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 80%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">HTML5</h5>
-                <data value="90">90%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 90%;"></div>
-              </div>
-
-            </li>
-            
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">CSS3</h5>
-                <data value="90">90%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 90%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">C++</h5>
-                <data value="50">50%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 50%;"></div>
-              </div>
-
-            </li>
-            
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">React.Js</h5>
-                <data value="50">60%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 60%;"></div>
-              </div>
-
-            </li>
-            
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Boostrap</h5>
-                <data value="50">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
-              </div>
-
-            </li>
-            
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Git</h5>
-                <data value="50">50%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 50%;"></div>
-              </div>
-
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #PORTFOLIO
-      -->
-
-      <article class="portfolio" data-page="cartera">
-
-        <header>
-          <h2 class="h2 article-title">Portfolio</h2>
-        </header>
-
-        <section class="projects">
-
-          <ul class="filter-list">
-
-            <li class="filter-item">
-              <button class="active" data-filter-btn>Todos</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Diseño</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Proyecto</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Web</button>
-            </li>
-
-            <li class="filter-item">
-              <button data-filter-btn>Ebook</button>
-            </li>
-
-          </ul>
-
-          <div class="filter-select-box">
-
-            <button class="filter-select" data-select>
-
-              <div class="select-value" data-selecct-value>Selección Categoria</div>
-
-              <div class="select-icon">
-                <ion-icon name="chevron-down"></ion-icon>
-              </div>
-
-            </button>
-
-            <ul class="select-list">
-
-              <li class="select-item">
-                <button data-select-item>Todos</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Diseño</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Proyecto</button>
-              </li>
-
-              <li class="select-item">
-                <button data-select-item>Web</button>
-              </li>
-
-            </ul>
-
-          </div>
-
-          <ul class="project-list">
-
-            <li class="project-item  active" data-filter-item data-category="web">
-              <a href="https://desayunosdym.netlify.app/" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="asset/img/Desayunos_.jpg" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Desayunos</h3>
-
-                <p class="project-category">Desarrollador Web</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="proyecto">
-              <a href="https://juakolp25.github.io/react-app/" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="asset/img/react-app.png" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">React App</h3>
-
-                <p class="project-category">Proyecto de React</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web">
-              <a href="https://juakolp25.github.io/fiestopolis/" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="asset/img/fiestopoli.png" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Fiestopolis</h3>
-
-                <p class="project-category">Desarrollador Web</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web">
-              <a href="https://juakolp25.github.io/redes_web/" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="asset/img/redes_web.png" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Redes de Protección</h3>
-
-                <p class="project-category">Desarrollador Web</p>
-
-              </a>
-            </li>
-            
-          </ul>
-
-        </section>
-
-      </article>
-
-
-      <!--
-        - #CONTACT
-      -->
-
-      <a href="https://wa.me/+5491159936607" class="boton_wa" target="_blank">
-        <i class="bi bi-whatsapp" id="icon_wa"></i>
-      </a>
-
-      
     </div>
 
-  </main>
+    <div class="contacts">
+      <div class="contact-row">
+        <div class="contact-icon"><i class="bi bi-envelope"></i></div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value"><a href="mailto:juaquingonzalez012@gmail.com">juaquingonzalez012@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon"><i class="bi bi-telephone"></i></div>
+        <div>
+          <div class="contact-label" data-i18n="phone">Teléfono</div>
+          <div class="contact-value"><a href="tel:+34603769132">+34 603 769 132</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon"><i class="bi bi-geo-alt"></i></div>
+        <div>
+          <div class="contact-label" data-i18n="location">Ubicación</div>
+          <div class="contact-value" data-i18n="locationValue">España / Argentina</div>
+        </div>
+      </div>
+    </div>
 
+    <div class="socials">
+      <a href="https://github.com/juakolp25" target="_blank" class="social-link" title="GitHub">
+        <i class="bi bi-github"></i>
+      </a>
+      <a href="https://twitter.com/Jkh_ksr25" target="_blank" class="social-link" title="Twitter / X">
+        <i class="bi bi-twitter-x"></i>
+      </a>
+      <a href="https://www.instagram.com/nino.hereje.jkh/" target="_blank" class="social-link" title="Instagram">
+        <i class="bi bi-instagram"></i>
+      </a>
+      <a href="https://wa.me/+34603769132" target="_blank" class="social-link" title="WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+      </a>
+    </div>
+  </aside>
 
+  <!-- MAIN -->
+  <div class="main">
 
+    <!-- NAV -->
+    <nav class="navbar">
+      <button class="nav-btn active" data-nav="about" data-i18n="nav_about">Acerca de mí</button>
+      <button class="nav-btn" data-nav="resume" data-i18n="nav_resume">Resumen</button>
+      <button class="nav-btn" data-nav="portfolio" data-i18n="nav_portfolio">Portfolio</button>
+    </nav>
 
+    <!-- ABOUT -->
+    <article class="article active" id="about">
+      <h2 class="section-title" data-i18n="nav_about">Acerca de mí</h2>
 
+      <div class="about-body">
+        <p data-i18n="about_p1">
+          Soy Juaquin A. Gonzalez, desarrollador web freelancer oriundo de Formosa, Argentina,
+          actualmente radicado en España. Trabajo de forma remota con personas que quieren llevar
+          sus proyectos de emprendimiento al mundo IT.
+        </p>
+        <p data-i18n="about_p2">
+          Me considero un estudiante permanente: en este mundo el aprendizaje es constante. Soy autodidacta,
+          ágil en la ejecución y me gusta trabajar en contacto directo con el cliente para que el producto
+          final sea exactamente lo que busca — con ese toque personal que marca la diferencia.
+        </p>
+      </div>
 
-  <!--
-    - custom js link
-  -->
-  <script src="asset/js/script.js"></script>
+      <div class="clients-section">
+        <h3 data-i18n="clients">Clientes</h3>
+        <div class="clients-grid">
+          <a href="https://www.instagram.com/desayunos.artesanales.2020/" target="_blank" class="client-card">
+            <img src="asset/img/logo_desayuno.png" alt="Desayunos Artesanales">
+          </a>
+          <a href="https://juakolp25.github.io/fiestopolis/" target="_blank" class="client-card">
+            <img src="asset/img/logo-fiestopolis.png" alt="Fiestopolis">
+          </a>
+          <a href="https://juakolp25.github.io/redes_web/" target="_blank" class="client-card">
+            <img src="asset/img/logo_redes.png" alt="Redes de Protección">
+          </a>
+        </div>
+      </div>
+    </article>
 
-  <!--
-    - ionicon link
-  -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <!-- RESUME -->
+    <article class="article" id="resume">
+      <h2 class="section-title" data-i18n="nav_resume">Resumen</h2>
+
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <div class="timeline-header-icon"><i class="bi bi-mortarboard"></i></div>
+          <h3 data-i18n="education">Educación</h3>
+        </div>
+        <ol class="timeline-list">
+          <li class="timeline-item">
+            <h4>Argentina Programa 4.0</h4>
+            <span>2022 — <span data-i18n="present">Actualidad</span></span>
+            <p data-i18n="edu1_text">Programador web full stack jr. Formación integral en desarrollo web: lenguajes, diseño y proyectos reales complejos.</p>
+          </li>
+          <li class="timeline-item">
+            <h4>I.F.T.S. N° 14</h4>
+            <span>2021 — <span data-i18n="present">Actualidad</span></span>
+            <p data-i18n="edu2_text">Tecnicatura en Automatización y Robótica. Conceptos de informática, electrónica y mecánica aplicados en proyectos reales.</p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="skills-card">
+        <h3 data-i18n="skills">Mis Herramientas</h3>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">JavaScript</span><span class="skill-pct">70%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">Python</span><span class="skill-pct">80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">HTML5</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">CSS3</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">React.js</span><span class="skill-pct">60%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">Bootstrap</span><span class="skill-pct">70%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">C++</span><span class="skill-pct">50%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-top"><span class="skill-name">Git</span><span class="skill-pct">50%</span></div>
+            <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PORTFOLIO -->
+    <article class="article" id="portfolio">
+      <h2 class="section-title">Portfolio</h2>
+
+      <div class="filter-row">
+        <button class="filter-btn active" data-filter="all" data-i18n="filter_all">Todos</button>
+        <button class="filter-btn" data-filter="web" data-i18n="filter_web">Web</button>
+        <button class="filter-btn" data-filter="proyecto" data-i18n="filter_project">Proyecto</button>
+        <button class="filter-btn" data-filter="diseño" data-i18n="filter_design">Diseño</button>
+      </div>
+
+      <div class="projects-grid">
+        <a href="https://desayunosdym.netlify.app/" target="_blank" class="project-card" data-category="web">
+          <div class="project-thumb">
+            <img src="asset/img/Desayunos_.jpg" alt="Desayunos" loading="lazy">
+            <div class="project-overlay"><i class="bi bi-eye"></i></div>
+          </div>
+          <div class="project-info">
+            <h3>Desayunos Artesanales</h3>
+            <p data-i18n="proj_web">Desarrollador Web</p>
+          </div>
+        </a>
+
+        <a href="https://juakolp25.github.io/react-app/" target="_blank" class="project-card" data-category="proyecto">
+          <div class="project-thumb">
+            <img src="asset/img/react-app.png" alt="React App" loading="lazy">
+            <div class="project-overlay"><i class="bi bi-eye"></i></div>
+          </div>
+          <div class="project-info">
+            <h3>React App</h3>
+            <p data-i18n="proj_react">Proyecto de React</p>
+          </div>
+        </a>
+
+        <a href="https://juakolp25.github.io/fiestopolis/" target="_blank" class="project-card" data-category="web">
+          <div class="project-thumb">
+            <img src="asset/img/fiestopoli.png" alt="Fiestopolis" loading="lazy">
+            <div class="project-overlay"><i class="bi bi-eye"></i></div>
+          </div>
+          <div class="project-info">
+            <h3>Fiestopolis</h3>
+            <p data-i18n="proj_web">Desarrollador Web</p>
+          </div>
+        </a>
+
+        <a href="https://juakolp25.github.io/redes_web/" target="_blank" class="project-card" data-category="web">
+          <div class="project-thumb">
+            <img src="asset/img/redes_web.png" alt="Redes de Protección" loading="lazy">
+            <div class="project-overlay"><i class="bi bi-eye"></i></div>
+          </div>
+          <div class="project-info">
+            <h3>Redes de Protección</h3>
+            <p data-i18n="proj_web">Desarrollador Web</p>
+          </div>
+        </a>
+      </div>
+    </article>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/+34603769132" class="wa-fab" target="_blank" title="WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+</a>
+
+<!-- ── i18n JSONs ──────────────────────────────────────────────────── -->
+<script>
+const i18n = {
+  es: {
+    role:          "Desarrollador Web",
+    available:     "Disponible para proyectos",
+    phone:         "Teléfono",
+    location:      "Ubicación",
+    locationValue: "España / Argentina",
+    nav_about:     "Acerca de mí",
+    nav_resume:    "Resumen",
+    nav_portfolio: "Portfolio",
+    about_p1:      "Soy Juaquin A. Gonzalez, desarrollador web freelancer oriundo de Formosa, Argentina, actualmente radicado en España. Trabajo de forma remota con personas que quieren llevar sus proyectos de emprendimiento al mundo IT.",
+    about_p2:      "Me considero un estudiante permanente: en este mundo el aprendizaje es constante. Soy autodidacta, ágil en la ejecución y me gusta trabajar en contacto directo con el cliente para que el producto final sea exactamente lo que busca — con ese toque personal que marca la diferencia.",
+    clients:       "Clientes",
+    education:     "Educación",
+    present:       "Actualidad",
+    edu1_text:     "Programador web full stack jr. Formación integral en desarrollo web: lenguajes, diseño y proyectos reales complejos.",
+    edu2_text:     "Tecnicatura en Automatización y Robótica. Conceptos de informática, electrónica y mecánica aplicados en proyectos reales.",
+    skills:        "Mis Herramientas",
+    filter_all:    "Todos",
+    filter_web:    "Web",
+    filter_project:"Proyecto",
+    filter_design: "Diseño",
+    proj_web:      "Desarrollador Web",
+    proj_react:    "Proyecto de React",
+  },
+  en: {
+    role:          "Web Developer",
+    available:     "Available for projects",
+    phone:         "Phone",
+    location:      "Location",
+    locationValue: "Spain / Argentina",
+    nav_about:     "About me",
+    nav_resume:    "Resume",
+    nav_portfolio: "Portfolio",
+    about_p1:      "I'm Juaquin A. Gonzalez, a freelance web developer originally from Formosa, Argentina, currently based in Spain. I work remotely with people who want to bring their entrepreneurial projects into the IT world.",
+    about_p2:      "I consider myself a lifelong learner — in this industry, growth never stops. I'm self-taught, fast in execution, and I enjoy close collaboration with clients to ensure the final product is exactly what they envisioned, with that personal touch that makes all the difference.",
+    clients:       "Clients",
+    education:     "Education",
+    present:       "Present",
+    edu1_text:     "Full Stack Jr. Web Developer program. Comprehensive training in web development: languages, design and real-world complex projects.",
+    edu2_text:     "Technical degree in Automation & Robotics. Core concepts in computing, electronics and mechanics applied through real projects.",
+    skills:        "My Toolkit",
+    filter_all:    "All",
+    filter_web:    "Web",
+    filter_project:"Project",
+    filter_design: "Design",
+    proj_web:      "Web Developer",
+    proj_react:    "React Project",
+  },
+  fr: {
+    role:          "Développeur Web",
+    available:     "Disponible pour des projets",
+    phone:         "Téléphone",
+    location:      "Localisation",
+    locationValue: "Espagne / Argentine",
+    nav_about:     "À propos",
+    nav_resume:    "Parcours",
+    nav_portfolio: "Portfolio",
+    about_p1:      "Je suis Juaquin A. Gonzalez, développeur web freelance originaire de Formosa, Argentine, actuellement basé en Espagne. Je travaille à distance avec des personnes qui souhaitent intégrer leurs projets entrepreneuriaux dans le monde IT.",
+    about_p2:      "Je me considère comme un apprenant permanent : dans ce domaine, la formation ne s'arrête jamais. Autodidacte et agile dans l'exécution, j'aime travailler en contact direct avec le client pour que le produit final soit exactement ce qu'il recherche.",
+    clients:       "Clients",
+    education:     "Formation",
+    present:       "Aujourd'hui",
+    edu1_text:     "Programme Développeur Web Full Stack Jr. Formation complète en développement web : langages, design et projets réels complexes.",
+    edu2_text:     "Technicien en Automatisation et Robotique. Notions d'informatique, d'électronique et de mécanique appliquées à des projets concrets.",
+    skills:        "Mes Outils",
+    filter_all:    "Tous",
+    filter_web:    "Web",
+    filter_project:"Projet",
+    filter_design: "Design",
+    proj_web:      "Développeur Web",
+    proj_react:    "Projet React",
+  },
+  ca: {
+    role:          "Desenvolupador Web",
+    available:     "Disponible per a projectes",
+    phone:         "Telèfon",
+    location:      "Ubicació",
+    locationValue: "Espanya / Argentina",
+    nav_about:     "Sobre mi",
+    nav_resume:    "Resum",
+    nav_portfolio: "Portfolio",
+    about_p1:      "Sóc Juaquin A. Gonzalez, desenvolupador web freelance originari de Formosa, Argentina, actualment establert a Espanya. Treballo de manera remota amb persones que volen portar els seus projectes d'emprenedoria al món de les TI.",
+    about_p2:      "Em considero un estudiant permanent: en aquest sector l'aprenentatge no s'acaba mai. Sóc autodidacta, àgil en l'execució i m'agrada treballar en contacte directe amb el client perquè el producte final sigui exactament el que cerca — amb aquell toc personal que marca la diferència.",
+    clients:       "Clients",
+    education:     "Formació",
+    present:       "Actualitat",
+    edu1_text:     "Programador web full stack jr. Formació integral en desenvolupament web: llenguatges, disseny i projectes reals complexos.",
+    edu2_text:     "Tècnic en Automatització i Robòtica. Conceptes d'informàtica, electrònica i mecànica aplicats en projectes reals.",
+    skills:        "Les Meves Eines",
+    filter_all:    "Tots",
+    filter_web:    "Web",
+    filter_project:"Projecte",
+    filter_design: "Disseny",
+    proj_web:      "Desenvolupador Web",
+    proj_react:    "Projecte de React",
+  },
+  it: {
+    role:          "Sviluppatore Web",
+    available:     "Disponibile per progetti",
+    phone:         "Telefono",
+    location:      "Posizione",
+    locationValue: "Spagna / Argentina",
+    nav_about:     "Chi sono",
+    nav_resume:    "Curriculum",
+    nav_portfolio: "Portfolio",
+    about_p1:      "Sono Juaquin A. Gonzalez, sviluppatore web freelance originario di Formosa, Argentina, attualmente residente in Spagna. Lavoro da remoto con persone che vogliono portare i loro progetti imprenditoriali nel mondo IT.",
+    about_p2:      "Mi considero uno studente permanente: in questo settore il apprendimento non si ferma mai. Sono autodidatta, rapido nell'esecuzione e mi piace lavorare a stretto contatto con il cliente per realizzare esattamente ciò che cerca — con quel tocco personale che fa la differenza.",
+    clients:       "Clienti",
+    education:     "Istruzione",
+    present:       "Presente",
+    edu1_text:     "Programmatore Web Full Stack Jr. Formazione completa nello sviluppo web: linguaggi, design e progetti reali complessi.",
+    edu2_text:     "Tecnico in Automazione e Robotica. Concetti di informatica, elettronica e meccanica applicati in progetti reali.",
+    skills:        "I Miei Strumenti",
+    filter_all:    "Tutti",
+    filter_web:    "Web",
+    filter_project:"Progetto",
+    filter_design: "Design",
+    proj_web:      "Sviluppatore Web",
+    proj_react:    "Progetto React",
+  }
+};
+
+// ── Apply language ────────────────────────────────────────────────
+function applyLang(lang) {
+  const t = i18n[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  // update nav data-page attribute to match new labels for active matching
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.dataset.nav = btn.dataset.nav; // keep data-nav as key, not text
+  });
+}
+
+// ── Lang switcher ─────────────────────────────────────────────────
+let currentLang = 'es';
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentLang = btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyLang(currentLang);
+  });
+});
+
+// ── Theme toggle ──────────────────────────────────────────────────
+const root = document.documentElement;
+const themeIcon = document.getElementById('themeIcon');
+let dark = true;
+document.getElementById('themeToggle').addEventListener('click', () => {
+  dark = !dark;
+  root.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeIcon.className = dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+});
+
+// ── Navigation ────────────────────────────────────────────────────
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.article').forEach(a => a.classList.remove('active'));
+    document.getElementById(btn.dataset.nav).classList.add('active');
+  });
+});
+
+// ── Portfolio filter ──────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.filter;
+    document.querySelectorAll('.project-card').forEach(card => {
+      const match = cat === 'all' || card.dataset.category === cat;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+});
+
+// Init
+applyLang('es');
+</script>
 
 </body>
-
 </html>
